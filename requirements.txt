@@ -18,5 +18,4 @@ gunicorn
 
 geopy
 unirest
-urllib2
 flask-cors
