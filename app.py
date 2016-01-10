@@ -19,11 +19,13 @@ from flask import make_response,jsonify
 from werkzeug.exceptions import default_exceptions, HTTPException
 from flask import make_response, abort as flask_abort, request
 #from flask.exceptions import JSONHTTPException
+from flask.ext.cors import CORS, cross_origin
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'this_should_be_configured')
-
-
+CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 ###
@@ -31,6 +33,7 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'this_should_be_configur
 ###
 
 @app.route('/')
+@cross_origin()
 def home():
     """Render website's home page."""
     return render_template('home.html')
@@ -84,7 +87,8 @@ def process_fact(fact,data,maxdistance,bestknownlife,latstart,lngstart,datacount
     if age > bestknownlife:
         #print(age, countryname)
         return (countryname,age,lat,lng)
-@app.route('/api',methods=['GET'])
+@app.route('/api',methods=['POST'])
+@cross_origin()
 def api():
     if not request.json or not 'max_distance' in request.json:
         flask_abort(400)

@@ -16,7 +16,7 @@ function myFunction() {
 $.ajax(
    {
         url: "http://127.0.0.1:5000/api",
-        type: "GET",
+        type: "POST",
         data: sendInfo,
         dataType: "json",
         contentType: 'application/json; charset=utf-8',
@@ -24,8 +24,12 @@ $.ajax(
         success: function (msg) {
             alert("aaaaa");
             document.getElementById("demo").innerHTML = "Hello World";
+           console.log("recieved ");
 
-        }
+        },
+       error: function(jqXHR) {
+           console.log("ajax error " + jqXHR.status);
+       }
     }
 );
 };
