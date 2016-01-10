@@ -20,3 +20,4 @@ geopy
 unirest
 json
 urllib2
+flask-cors
