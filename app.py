@@ -5,13 +5,25 @@ Werkzeug Documentation:  http://werkzeug.pocoo.org/documentation/
 
 This file creates your application.
 """
+#!/usr/bin/env python3
 
+import connexion
 import os
+import werkzeug.urls
+from geopy.distance import vincenty
+import unirest
+import json
+import urllib2
 from flask import Flask, render_template, request, redirect, url_for
+from flask import make_response,jsonify
+from werkzeug.exceptions import default_exceptions, HTTPException
+from flask import make_response, abort as flask_abort, request
+#from flask.exceptions import JSONHTTPException
 
 app = Flask(__name__)
-
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'this_should_be_configured')
+
+
 
 
 ###
@@ -29,6 +41,79 @@ def about():
     """Render the website's about page."""
     return render_template('about.html')
 
+
+def process_fact(fact,data,maxdistance,bestknownlife,latstart,lngstart,datacountries):
+    #@50.0752962,14.419395,16.5z?hl=en
+    # latstart = 50.0752962
+    # lngstart = 14.419395
+
+    age = fact["value"]["numeric"]
+    countryname = "none"
+    countrycode = "none"
+    info = fact["Dim"]
+    for category in info:
+        if 'YEAR' == category["category"]:
+            if category["code"] != '2013':
+                return
+        if 'SEX' == category["category"]:
+            if category["code"] != 'FMLE':
+                return
+        #if 'REGION' == category["category"]:
+        #   if category["code"] != 'EUR':
+        #       return
+    for category in info:
+        if 'COUNTRY' == category["category"]:
+            countrycode = category["code"]
+    for country in data['dimension'][5]['code']:
+        if country['label'] == countrycode:
+            countryname = country['display']
+            break
+    if countryname == "none":
+        return
+    for con in datacountries.body:
+        if con["alpha3Code"] == countrycode:
+            lat = con["latlng"][0]
+            lng = con["latlng"][1]
+            #print(countryname)
+
+    start = (latstart, lngstart)
+    end = (lat, lng)
+    distance = vincenty(start, end).kilometers
+    if distance > maxdistance:
+        return
+    if age > bestknownlife:
+        #print(age, countryname)
+        return (countryname,age,lat,lng)
+@app.route('/api',methods=['GET'])
+def api():
+    if not request.json or not 'max_distance' in request.json:
+        flask_abort(400)
+    max_distance = request.json['max_distance']
+    latstart = request.json['latitude']
+    lngstart = request.json['longtitude']
+
+    data = json.load(urllib2.urlopen('http://apps.who.int/gho/athena/api/GHO/WHOSIS_000001.json'))
+    dataset = data['fact']
+    besknownage = 0
+
+    datacountries = unirest.get("https://restcountries-v1.p.mashape.com/all",
+        headers={
+            "X-Mashape-Key": "QFYbNVcpjJmsh0Qh8BjOmQlVu5dhp1bB0T8jsnZs1kzeBXgRsX",
+            "Accept": "application/json"
+        }
+    )
+
+    #http://maps.googleapis.com/maps/api/geocode/json?address=Hungary&sensor=false
+    for fact in dataset:
+        abc = process_fact(fact,data,float(max_distance),besknownage,float(latstart),float(lngstart),datacountries)
+        if abc is not None:
+            bestknowncountry = abc
+            besknownage = abc[1]
+   # print(bestknowncountry)
+    return jsonify({'state': bestknowncountry[0],'latitude': bestknowncountry[2],'longtitude': bestknowncountry[3]})
+
+
+    #return redirect("http://apps.who.int/gho/athena/api/GHO/WHOSIS_000001.json")
 
 ###
 # The functions below should be applicable to all Flask apps.
@@ -51,12 +136,14 @@ def add_header(response):
     response.headers['Cache-Control'] = 'public, max-age=600'
     return response
 
-
+@app.errorhandler(400)
+def not_found(error):
+    return make_response(jsonify({'code':'','400': 'Bad request, should be the Maximal distance,'
+                                                   'Latitude component of location,Longitude component of location all as doubles'}), 400)
 @app.errorhandler(404)
 def page_not_found(error):
     """Custom 404 page."""
     return render_template('404.html'), 404
-
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,0 +1,73 @@
+---
+swagger: "2.0"
+info:
+  description: "Api to find a better live location"
+  version: "0.0.1"
+  title: "WhereEmigrate"
+host: "api.uber.com"
+basePath: "/v1"
+schemes:
+- "https"
+produces:
+- "application/json"
+paths:
+  /target:
+    get:
+      tags:
+      - "Target destination"
+      summary: "Product Types"
+      description: "Returns GPS coordinates where to go\n"
+      parameters:
+      - name: "latitude"
+        in: "query"
+        description: "Latitude component of location."
+        required: true
+        type: "number"
+        format: "double"
+      - name: "longitude"
+        in: "query"
+        description: "Longitude component of location."
+        required: true
+        type: "number"
+        format: "double"
+      responses:
+        200:
+          description: "An array of products"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/TargetPlace"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-tags:
+      - tag: "Target destination"
+definitions:
+  TargetPlace:
+    type: "object"
+    properties:
+      State:
+        type: "string"
+        description: "Target state"
+      city:
+        type: "string"
+        description: "Target city"
+      latitude:
+        type: "number"
+        format: "double"
+        description: "Latitude component of location."
+      longtitude:
+        type: "number"
+        format: "double"
+        description: "Longitude component of location."
+  Error:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      message:
+        type: "string"
+      fields:
+        type: "string"

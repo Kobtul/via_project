@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<title>My jQuery JSON Web Page</title>
+<head>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript">
+
+    function myFunction() {
+    /*
+    curl -i -H "Content-Type: application/json -X GET -d
+    '{"max_distance":"1000","latitude":"50.0752962","longtitude":"14.419395"}' http://localhost:5000/api
+     */
+    //document.getElementById("demo").innerHTML = "Hello World";
+    var resultDiv = $("#resultDivContainer");
+    $.ajax({
+        url: "http://127.0.0.1:5000/",
+        type: "GET",
+        data: { max_distance: "1000", latitude: "50.0752962", longtitude: "14.419395" },
+        dataType: "json",
+        success: function (result) {
+            switch (result) {
+                case true:
+                    //processResponse(result);
+                    document.getElementById("demo").innerHTML = "Hello World";
+                    break;
+                default:
+                    resultDiv.html(result);
+            }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+        alert(xhr.status);
+        alert(thrownError);
+        }
+    });
+}(jQuery);
+</script>
+</head>
+<body>
+
+<h1>My jQuery JSON Web Page</h1>
+
+<div id="resultDivContainer"></div>
+
+<button type="button" onclick="JSONTest()">JSON</button>
+
+</body>
+</html>

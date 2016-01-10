@@ -1,9 +1,56 @@
 {% extends "base.html" %}
 
-
 {% block js %}
+<script type="text/javascript">
+    /*
+    curl -i -H "Content-Type: application/json -X GET -d
+    '{"max_distance":"1000","latitude":"50.0752962","longtitude":"14.419395"}' http://localhost:5000/api
+     */
+
+function myFunction() {
+    var sendInfo = {
+           max_distance: 1000,
+           latitude: 50.0752962,
+           longtitude: 14.419395
+       };
+$.ajax(
+   {
+        url: "http://127.0.0.1:5000/api",
+        type: "GET",
+        data: sendInfo,
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+
+        success: function (msg) {
+            alert("aaaaa");
+            document.getElementById("demo").innerHTML = "Hello World";
+
+        }
+    }
+);
+};
+    var getPoster = function() {
+        var sendInfo = {
+            max_distance: 1000,
+            latitude: 50.0752962,
+            longtitude: 14.419395
+        };
+
+        $.getJSON("http://127.0.0.1:5000/api" + sendInfo + "?callback=?", function (json)
+        {
+            document.getElementById("demo").innerHTML = "Hello World";
+        }
+        )
+    }
+
+
+</script>
 {% endblock %}
 
 
 {% block main %}
+<input name="name" size="15" type="text" />
+<input name="name" size="15" type="text" />
+<button onclick="myFunction()">Click me</button>
+<p id="demo"></p>
 {% endblock %}
