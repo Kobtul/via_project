@@ -7,7 +7,7 @@ This file creates your application.
 """
 #!/usr/bin/env python3
 
-import connexion
+#import connexion
 import os
 import werkzeug.urls
 from geopy.distance import vincenty
