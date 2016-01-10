@@ -9,14 +9,14 @@ This file creates your application.
 
 #import connexion
 import os
-import werkzeug.urls
+#import werkzeug.urls
 from geopy.distance import vincenty
 import unirest
 import json
 import urllib2
 from flask import Flask, render_template, request, redirect, url_for
 from flask import make_response,jsonify
-from werkzeug.exceptions import default_exceptions, HTTPException
+#from werkzeug.exceptions import default_exceptions, HTTPException
 from flask import make_response, abort as flask_abort, request
 #from flask.exceptions import JSONHTTPException
 from flask.ext.cors import CORS, cross_origin
