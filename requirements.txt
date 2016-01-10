@@ -18,3 +18,5 @@ gunicorn
 
 geopy
 unirest
+json
+urllib2
