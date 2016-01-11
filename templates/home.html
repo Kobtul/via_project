@@ -15,12 +15,35 @@ function myFunction() {
        };
 $.ajax(
    {
-        url: "http://127.0.0.1:5000/api",
+        url: "http://localhost:5000/api",
         type: "POST",
         data: sendInfo,
         dataType: "json",
         contentType: 'application/json; charset=utf-8',
+        crossDomain:true,
 
+
+        success: function (msg) {
+            alert("aaaaa");
+            document.getElementById("demo").innerHTML = "Hello World";
+           console.log("recieved ");
+
+        },
+       error: function(jqXHR) {
+           console.log("ajax error " + jqXHR.status);
+       }
+    }
+);
+};
+function myFunction2() {
+$.ajax(
+   {
+       //,latitude: 50.0752962 , longtitude:14.419395
+        url: "http://localhost:5000/api",
+        type: "GET",
+        contentType: 'application/json; charset=utf-8',
+        crossDomain:true,
+        data: {max_distance:1000,latitude: 50.0752962 , longtitude:14.419395},
         success: function (msg) {
             alert("aaaaa");
             document.getElementById("demo").innerHTML = "Hello World";
@@ -55,6 +78,6 @@ $.ajax(
 {% block main %}
 <input name="name" size="15" type="text" />
 <input name="name" size="15" type="text" />
-<button onclick="myFunction()">Click me</button>
+<button onclick="myFunction2()">Click me</button>
 <p id="demo"></p>
 {% endblock %}

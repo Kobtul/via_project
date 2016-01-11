@@ -5,18 +5,27 @@ Werkzeug Documentation:  http://werkzeug.pocoo.org/documentation/
 
 This file creates your application.
 """
+#!/usr/bin/env python3
 
+#import connexion
 import os
-import os
+#import werkzeug.urls
+from geopy.distance import vincenty
 import unirest
 import json
 import urllib2
-from geopy.distance import vincenty
-from flask import Flask, render_template, request, redirect, url_for,make_response,jsonify
+from flask import Flask, render_template, request, redirect, url_for
+from flask import make_response,jsonify
+#from werkzeug.exceptions import default_exceptions, HTTPException
+from flask import make_response, abort as flask_abort, request
+#from flask.exceptions import JSONHTTPException
+from flask.ext.cors import CORS, cross_origin
+from flask import request
 
 app = Flask(__name__)
-
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'this_should_be_configured')
+CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 ###
@@ -24,15 +33,18 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'this_should_be_configur
 ###
 
 @app.route('/')
+@cross_origin()
 def home():
     """Render website's home page."""
     return render_template('home.html')
 
 
 @app.route('/about/')
+@cross_origin()
 def about():
     """Render the website's about page."""
     return render_template('about.html')
+
 
 def process_fact(fact,data,maxdistance,bestknownlife,latstart,lngstart,datacountries):
     #@50.0752962,14.419395,16.5z?hl=en
@@ -76,13 +88,21 @@ def process_fact(fact,data,maxdistance,bestknownlife,latstart,lngstart,datacount
     if age > bestknownlife:
         #print(age, countryname)
         return (countryname,age,lat,lng)
-
-@app.route('/api/')
+app.route('/api2/',methods=['GET'])
+@cross_origin()
+def api2():
+    return render_template('about.html')
+app.route('/api2/',methods=['GET'])
+@cross_origin()
 def api():
+    #if not request.json or not 'max_distance' in request.json:
+    #    flask_abort(400)
+    #max_distance = request.json['max_distance']
+    #latstart = request.json['latitude']
+    #lngstart = request.json['longtitude']
     max_distance = request.args.get('max_distance')
-    latstart = request.args.get('latitude')
+    latstart = request.args.get('latstart')
     lngstart = request.args.get('longtitude')
-    print(max_distance,latstart,lngstart)
 
     data = json.load(urllib2.urlopen('http://apps.who.int/gho/athena/api/GHO/WHOSIS_000001.json'))
     dataset = data['fact']
@@ -95,12 +115,22 @@ def api():
         }
     )
 
+    #http://maps.googleapis.com/maps/api/geocode/json?address=Hungary&sensor=false
     for fact in dataset:
         abc = process_fact(fact,data,float(max_distance),besknownage,float(latstart),float(lngstart),datacountries)
         if abc is not None:
             bestknowncountry = abc
             besknownage = abc[1]
+   # print(bestknowncountry)
+   #  origin = request.headers['Origin']
+   #  response = make_response({'state': bestknowncountry[0],'latitude': bestknowncountry[2],'longtitude': bestknowncountry[3]})
+   #  response.headers['Access-Control-Allow-Origin'] = origin
+   #  return response
+
     return jsonify({'state': bestknowncountry[0],'latitude': bestknowncountry[2],'longtitude': bestknowncountry[3]})
+
+
+    #return redirect("http://apps.who.int/gho/athena/api/GHO/WHOSIS_000001.json")
 
 ###
 # The functions below should be applicable to all Flask apps.
@@ -112,7 +142,13 @@ def send_text_file(file_name):
     file_dot_text = file_name + '.txt'
     return app.send_static_file(file_dot_text)
 
-
+def any_response(data):
+  #ALLOWED = ['http://localhost:8888']
+  response = make_response(data)
+  origin = request.headers['Origin']
+  #if origin in ALLOWED:
+  response.headers['Access-Control-Allow-Origin'] = origin
+  return response
 @app.after_request
 def add_header(response):
     """
@@ -123,12 +159,14 @@ def add_header(response):
     response.headers['Cache-Control'] = 'public, max-age=600'
     return response
 
-
+@app.errorhandler(400)
+def not_found(error):
+    return make_response(jsonify({'code':'','400': 'Bad request, should be the Maximal distance,'
+                                                   'Latitude component of location,Longitude component of location all as doubles'}), 400)
 @app.errorhandler(404)
 def page_not_found(error):
     """Custom 404 page."""
     return render_template('404.html'), 404
-
 
 if __name__ == '__main__':
     app.run(debug=True)
