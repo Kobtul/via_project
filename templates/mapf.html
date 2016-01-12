@@ -19,7 +19,7 @@ $.ajax(
         type: "GET",
         //contentType: 'application/json; charset=utf-8',
         crossDomain:true,
-        dataType: 'jsonp',
+        dataType: 'json',
         data: {max_distance:1000,latitude: 10 , longitude:-5},
         success: function(msg) { handleData(msg) },
        error: function(jqXHR) {
