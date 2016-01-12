@@ -17,7 +17,7 @@ $.ajax(
         //url: "http://localhost:5000/api",
         url: "https://viaapi.herokuapp.com/api",
         type: "GET",
-        contentType: 'application/json; charset=utf-8',
+        //contentType: 'application/json; charset=utf-8',
         crossDomain:true,
         data: {max_distance:1000,latitude: 10 , longitude:-5},
         success: function(msg) { handleData(msg) },
