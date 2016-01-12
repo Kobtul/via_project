@@ -7,7 +7,6 @@ This file creates your application.
 """
 
 import os
-import os
 import unirest
 import json
 import urllib2
