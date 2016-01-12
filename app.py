@@ -29,15 +29,7 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'this_should_be_configur
 @cross_origin()
 def home():
     """Render website's home page."""
-    return render_template('mape.html')
-app.route('/maps/')
-def maps():
-    """Render the website's about page."""
-    return render_template('mapsexample.html')
-app.route('/mapg/')
-def maps():
-    """Render the website's about page."""
-    return render_template('mapg.html')
+    return render_template('mapf.html')
 @app.route('/about/')
 @cross_origin()
 def about():
