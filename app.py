@@ -35,7 +35,12 @@ def home():
 @cross_origin()
 def gui():
     """Render the website's about page."""
-    return render_template('mapf.html')
+    return render_template('stylestest.html')
+@app.route('/testing/')
+@cross_origin()
+def testing():
+    """Render the website's about page."""
+    return render_template('stylestest.html')
 def process_fact(fact,data,maxdistance,bestknownlife,latstart,lngstart,datacountries):
     #@50.0752962,14.419395,16.5z?hl=en
     # latstart = 50.0752962
@@ -112,7 +117,7 @@ def api():
             besknownage = abc[1]
     if bestknowncountry is not None:
         print (bestknowncountry[0],bestknowncountry[2],bestknowncountry[3])
-        return jsonify({'state': bestknowncountry[0],'latitude': bestknowncountry[2],'longitude': bestknowncountry[3]})
+        return jsonify({'state': bestknowncountry[0],'lifelength':bestknowncountry[1],'latitude': bestknowncountry[2],'longitude': bestknowncountry[3]})
     else:
        return jsonify({'code':400,'text': 'No country in selected distance.'
                                                    })
