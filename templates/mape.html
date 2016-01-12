@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Geolocation</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+          min-width: 200px;
+          width: 50%;
+          min-height: 200px;
+          height: 80%;
+          border: 1px solid blue;
+      }
+    </style>
+  </head>
+  <body>
+    <input type="text" name="distance" id="distance" placeholder="1000" value="1000">
+    <input type="text" name="latitude" id="latitude" placeholder="50.0752962" value="50.0752962">
+    <input type="text" name="longitude" id="longitude" placeholder="14.419395" value="14.419395">
+    <p id="demo"></p>
+    <div id="map"></div>
+    <button onclick="myFunction2()">Click me</button>
+    <script>
+
+
+// Note: This example requires that you consent to location sharing when
+// prompted by your browser. If you see the error "The Geolocation service
+// failed.", it means you probably did not give permission for the browser to
+// locate you.
+var myMap;
+var infoWindow;
+google.maps.event.addListener(map, 'click', function(event) {
+   alert( 'Lat: ' + event.latLng.lat() + ' and Longitude is: ' + event.latLng.lng() );
+});
+function initMap() {
+  myMap = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 50.064465, lng: 14.3587691},
+    zoom: 6
+  });
+  infoWindow = new google.maps.InfoWindow({map: myMap});
+    google.maps.event.addListener(myMap,'click',function() {
+        alert("aaaa")
+        alert(results[0].geometry.location.lat())
+        //  document.getElementById('latitude').value = event.latLng.lat();
+        //  document.getElementById('latitude').value = event.latLng.lng();
+
+  });
+  // Try HTML5 geolocation.
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var pos = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+        document.getElementById('latitude').value = pos.lat;
+        document.getElementById('longitude').value = pos.lng;
+      infoWindow.setPosition(pos);
+      infoWindow.setContent('Your location');
+      map.setCenter(pos);
+    }, function() {
+      handleLocationError(true, infoWindow, map.getCenter());
+    });
+  } else {
+    // Browser doesn't support Geolocation
+    handleLocationError(false, infoWindow, map.getCenter());
+  }
+}
+
+function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+  infoWindow.setPosition(pos);
+  infoWindow.setContent(browserHasGeolocation ?
+                        'Error: The Geolocation service failed.' :
+                        'Error: Your browser doesn\'t support geolocation.');
+}
+function myFunction2() {
+
+    var dist = parseFloat($('#distance').val());
+    var latitude = parseFloat($('#latitude').val());
+    var longitude = parseFloat($('#longitude').val());
+
+    //var dist = parseFloat(document.getElementById("distance").innerHTML);
+$.ajax(
+   {
+       //,latitude: 50.0752962 , longitude:14.419395
+        url: "http://localhost:5000/api",
+        type: "GET",
+        contentType: 'application/json; charset=utf-8',
+        crossDomain:true,
+        data: {max_distance:dist,latitude: latitude , longitude:longitude},
+        success: function(msg) { handleData(msg) },
+       error: function(jqXHR) {
+           console.log("ajax error " + jqXHR.status);
+       }
+    }
+);
+}
+function handleData(msg) {
+   // alert(msg);
+    //do some stuff
+    //mapy(msg);
+    //alert("aaaaa");
+    document.getElementById("demo").innerHTML = msg.state + " " + parseFloat(msg.latitude) + " " + parseFloat(msg.longitude);
+    console.log("recieved ");
+    var pos = {
+        lat: parseFloat(msg.latitude),
+        lng: parseFloat(msg.longitude)
+      };
+    infoWindow.setPosition(pos);
+    infoWindow.setContent('Your destination');
+    myMap.setCenter(pos);
+    //myMap.setCenter(new google.maps.LatLng( 45, 19 ) );
+
+};
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAP0EzVn_BOlOq0JHWijuvSVQp-7eHZt8s&signed_in=true&callback=initMap"
+        async defer>
+    </script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+  </body>
+</html>

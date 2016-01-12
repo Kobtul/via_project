@@ -13,7 +13,8 @@ import json
 import urllib2
 from geopy.distance import vincenty
 from flask import Flask, render_template, request, redirect, url_for,make_response,jsonify
-
+from signal import signal, SIGPIPE, SIG_DFL
+signal(SIGPIPE,SIG_DFL)
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'this_should_be_configured')
@@ -27,13 +28,18 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'this_should_be_configur
 def home():
     """Render website's home page."""
     return render_template('home.html')
-
-
+app.route('/maps/')
+def maps():
+    """Render the website's about page."""
+    return render_template('mapsexample.html')
+app.route('/mapg/')
+def maps():
+    """Render the website's about page."""
+    return render_template('mapg.html')
 @app.route('/about/')
 def about():
     """Render the website's about page."""
-    return render_template('about.html')
-
+    return render_template('mape.html')
 def process_fact(fact,data,maxdistance,bestknownlife,latstart,lngstart,datacountries):
     #@50.0752962,14.419395,16.5z?hl=en
     # latstart = 50.0752962
@@ -79,9 +85,9 @@ def process_fact(fact,data,maxdistance,bestknownlife,latstart,lngstart,datacount
 
 @app.route('/api/')
 def api():
-    max_distance = request.args.get('max_distance')
-    latstart = request.args.get('latitude')
-    lngstart = request.args.get('longtitude')
+    max_distance = float(request.args.get('max_distance'))
+    latstart = float(request.args.get('latitude'))
+    lngstart = float(request.args.get('longitude'))
     print(max_distance,latstart,lngstart)
 
     data = json.load(urllib2.urlopen('http://apps.who.int/gho/athena/api/GHO/WHOSIS_000001.json'))
@@ -100,7 +106,8 @@ def api():
         if abc is not None:
             bestknowncountry = abc
             besknownage = abc[1]
-    return jsonify({'state': bestknowncountry[0],'latitude': bestknowncountry[2],'longtitude': bestknowncountry[3]})
+    print (bestknowncountry[0],bestknowncountry[2],bestknowncountry[3])
+    return jsonify({'state': bestknowncountry[0],'latitude': bestknowncountry[2],'longitude': bestknowncountry[3]})
 
 ###
 # The functions below should be applicable to all Flask apps.

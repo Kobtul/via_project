@@ -2,40 +2,27 @@
 
 {% block js %}
 <script type="text/javascript">
-    /*
-    curl -i -H "Content-Type: application/json -X GET -d
-    '{"max_distance":"1000","latitude":"50.0752962","longtitude":"14.419395"}' http://localhost:5000/api
-     */
-
-function myFunction() {
-    var sendInfo = {
-           max_distance: 1000,
-           latitude: 50.0752962,
-           longtitude: 14.419395
-       };
-$.ajax(
-   {
-        url: "http://localhost:5000/api",
-        type: "POST",
-        data: sendInfo,
-        dataType: "json",
-        contentType: 'application/json; charset=utf-8',
-        crossDomain:true,
-
-
-        success: function (msg) {
-            alert("aaaaa");
-            document.getElementById("demo").innerHTML = "Hello World";
-           console.log("recieved ");
-
-        },
-       error: function(jqXHR) {
-           console.log("ajax error " + jqXHR.status);
-       }
+function handleData(msg) {
+   // alert(msg);
+    //do some stuff
+    //mapy(msg);
+    //alert("aaaaa");
+    document.getElementById("demo").innerHTML = msg.state;
+    console.log("recieved ");
+    var mapCanvas = document.getElementById('map');
+    var mapOptions = {
+          center: new google.maps.LatLng(44.5403, -78.5463),
+          zoom: 8,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
     }
-);
+    var map = new google.maps.Map(mapCanvas, mapOptions)
 };
 function myFunction2() {
+    var dist = parseFloat($('#distance').val());
+    var latitude = parseFloat($('#latitude').val());
+    var longtitude = parseFloat($('#longtitude').val());
+
+    //var dist = parseFloat(document.getElementById("distance").innerHTML);
 $.ajax(
    {
        //,latitude: 50.0752962 , longtitude:14.419395
@@ -43,41 +30,60 @@ $.ajax(
         type: "GET",
         contentType: 'application/json; charset=utf-8',
         crossDomain:true,
-        data: {max_distance:1000,latitude: 50.0752962 , longtitude:14.419395},
-        success: function (msg) {
-            alert("aaaaa");
-            document.getElementById("demo").innerHTML = "Hello World";
-           console.log("recieved ");
-
-        },
+        data: {max_distance:dist,latitude: latitude , longtitude:longtitude},
+        success: function(msg) { handleData(msg) },
        error: function(jqXHR) {
            console.log("ajax error " + jqXHR.status);
        }
     }
 );
-};
-    var getPoster = function() {
-        var sendInfo = {
-            max_distance: 1000,
-            latitude: 50.0752962,
-            longtitude: 14.419395
-        };
+}
+</script>
+<script>
+    function initMap() {
+  var map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: -34.397, lng: 150.644},
+    zoom: 6
+  });
+  var infoWindow = new google.maps.InfoWindow({map: map});
 
-        $.getJSON("http://127.0.0.1:5000/api" + sendInfo + "?callback=?", function (json)
-        {
-            document.getElementById("demo").innerHTML = "Hello World";
-        }
-        )
-    }
+  // Try HTML5 geolocation.
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var pos = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
 
+      infoWindow.setPosition(pos);
+      infoWindow.setContent('Location found.');
+      map.setCenter(pos);
+    }, function() {
+      handleLocationError(true, infoWindow, map.getCenter());
+    });
+  } else {
+    // Browser doesn't support Geolocation
+    handleLocationError(false, infoWindow, map.getCenter());
+  }
+}
 
+function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+    infoWindow.setPosition(pos);
+    infoWindow.setContent(browserHasGeolocation ?
+            'Error: The Geolocation service failed.' :
+            'Error: Your browser doesn\'t support geolocation.');
+}
 </script>
 {% endblock %}
 
 
 {% block main %}
-<input name="name" size="15" type="text" />
-<input name="name" size="15" type="text" />
+<input type="text" name="distance" id="distance" placeholder="1000" value="1000">
+<input type="text" name="latitude" id="latitude" placeholder="50.0752962" value="50.0752962">
+<input type="text" name="longtitude" id="longtitude" placeholder="14.419395" value="14.419395">
 <button onclick="myFunction2()">Click me</button>
-<p id="demo"></p>
+<p id="demo"></p><div class="span11">
+</div>
+    <div id="map"></div>
+
 {% endblock %}

@@ -22,6 +22,8 @@
 
   <!-- Rather use `less.js` to dynamically compile your `stylesheet/less` files? -->
   <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.4.1/less.min.js"></script>
+
+
   <script>window.less || document.write('<script src="/static/js/less.js">\x3C/script>')</script>
 
   <!-- Need Modernizr? Uncomment the following script. -->
@@ -52,7 +54,11 @@
 
 
   <!-- Additional JavaScript libraries and plugins... -->
-  {% block js %}{% endblock %}
+  {% block js %}
+      <script src="https://raw.githubusercontent.com/HPNeo/gmaps/master/gmaps.js"></script>
+    <!--<script src="https://maps.googleapis.com/maps/api/js"></script>-->
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAP0EzVn_BOlOq0JHWijuvSVQp-7eHZt8s&signed_in=true&callback=initMap" async defer></script>
+  {% endblock %}
 
 
   <!-- mathiasbynens.be/notes/async-analytics-snippet Change UA-XXXXX-X to be your site's ID -->
