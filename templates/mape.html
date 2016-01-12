@@ -4,6 +4,7 @@
     <title>Geolocation</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <style>
       html, body {
         height: 100%;
@@ -23,9 +24,9 @@
     <input type="text" name="distance" id="distance" placeholder="1000" value="1000">
     <input type="text" name="latitude" id="latitude" placeholder="50.0752962" value="50.0752962">
     <input type="text" name="longitude" id="longitude" placeholder="14.419395" value="14.419395">
+    <button onclick="myFunction2()">Click me</button>
     <p id="demo"></p>
     <div id="map"></div>
-    <button onclick="myFunction2()">Click me</button>
     <script>
 
 
@@ -35,15 +36,7 @@
 // locate you.
 var myMap;
 var infoWindow;
-var marker = new google.maps.Marker({
-    position: location,
-    map: myMap,
-    animation: google.maps.Animation.DROP,
-
-});
-google.maps.event.addListener(map, 'click', function(event) {
-   alert( 'Lat: ' + event.latLng.lat() + ' and Longitude is: ' + event.latLng.lng() );
-});
+var marker;
 function initMap() {
     var latlng = new google.maps.LatLng(42.55308, 9.140625);
   myMap = new google.maps.Map(document.getElementById('map'), {
@@ -51,13 +44,20 @@ function initMap() {
     zoom: 6
   });
   infoWindow = new google.maps.InfoWindow({map: myMap});
+    marker = new google.maps.Marker({
+        position: location,
+        map: myMap,
+        animation: google.maps.Animation.DROP,
+});
     google.maps.event.addListener(myMap, 'click', function(event) {
             placeMarker(event.latLng);
         });
 
         function placeMarker(location) {
             marker.setPosition(location);
-            map.setCenter(location);
+            myMap.setCenter(location);
+            document.getElementById('latitude').value = location.lat();
+            document.getElementById('longitude').value = location.lng();
         }
   // Try HTML5 geolocation.
   if (navigator.geolocation) {
@@ -70,7 +70,8 @@ function initMap() {
         document.getElementById('longitude').value = pos.lng;
       infoWindow.setPosition(pos);
       infoWindow.setContent('Your location');
-      map.setCenter(pos);
+      marker.setPosition(pos);
+      myMap.setCenter(pos);
     }, function() {
       handleLocationError(true, infoWindow, map.getCenter());
     });
@@ -119,13 +120,15 @@ function handleData(msg) {
          document.getElementById("demo").innerHTML = msg.text;
      }
     else {
-         document.getElementById("demo").innerHTML = msg.state + " " + parseFloat(msg.latitude) + " " + parseFloat(msg.longitude);
+         //document.getElementById("demo").innerHTML = msg.state + " " + parseFloat(msg.latitude) + " " + parseFloat(msg.longitude);
+         document.getElementById("demo").innerHTML = msg.state;
          console.log("recieved ");
          var pos = {
              lat: parseFloat(msg.latitude),
              lng: parseFloat(msg.longitude)
          };
          infoWindow.setPosition(pos);
+         marker.setPosition(pos);
          infoWindow.setContent('Your destination');
          myMap.setCenter(pos);
          //myMap.setCenter(new google.maps.LatLng( 45, 19 ) );
