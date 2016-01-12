@@ -14,9 +14,10 @@ import math
 from geopy.distance import vincenty
 from flask import Flask, render_template, request, redirect, url_for,make_response,jsonify,abort as flask_abort
 from signal import signal, SIGPIPE, SIG_DFL
+from flask.ext.cors import CORS, cross_origin
 signal(SIGPIPE,SIG_DFL)
 app = Flask(__name__)
-
+CORS(app)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'this_should_be_configured')
 
 
@@ -25,6 +26,7 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'this_should_be_configur
 ###
 
 @app.route('/')
+@cross_origin()
 def home():
     """Render website's home page."""
     return render_template('mape.html')
@@ -84,6 +86,7 @@ def process_fact(fact,data,maxdistance,bestknownlife,latstart,lngstart,datacount
         return (countryname,age,lat,lng)
 
 @app.route('/api/')
+@cross_origin()
 def api():
     try:
         max_distance = float(request.args.get('max_distance'))
