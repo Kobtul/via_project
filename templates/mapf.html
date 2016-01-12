@@ -111,7 +111,17 @@ function handleData(msg) {
          document.getElementById("demo").innerHTML = msg.text;
      }
     else {
+       //document.getElementById("demo").innerHTML = msg.state + " " + parseFloat(msg.latitude) + " " + parseFloat(msg.longitude);
        document.getElementById("demo").innerHTML = msg.state;
+       console.log("recieved ");
+       var pos = {
+           lat: parseFloat(msg.latitude),
+           lng: parseFloat(msg.longitude)
+       };
+       infoWindow.setPosition(pos);
+       marker.setPosition(pos);
+       infoWindow.setContent('Your destination');
+       myMap.setCenter(pos);
    }
 };
     </script>
