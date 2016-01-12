@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+     <title>WhereEmigrate</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
+    <link rel="icon" href="static/favicon.ico">
 
     <title>Starter Template for Bootstrap</title>
 
@@ -34,8 +35,7 @@
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Home</a></li>
-            <li><a href="/gui">API docuemtation</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="/apidoc">API documentation</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -46,10 +46,21 @@
       <div class="starter-template">
         <h1>Target country calculation</h1>
         <p class="lead">Put maximal distance you want to travel with your gps position(latitude and longitude) and you will get the most suitable country for you. It is based on the data of the estimated life length</p>
-          <input type="text" name="distance" id="distance" placeholder="1000" value="1000">
-        <input type="text" name="latitude" id="latitude" placeholder="50.0752962" value="50.0752962">
-        <input type="text" name="longitude" id="longitude" placeholder="14.419395" value="14.419395">
-        <button onclick="myFunction2(event);">Click me</button>
+
+  <tr>
+    <td>Maximum distance</td>
+    <td><input type="text" name="distance" id="distance" placeholder="1000" value="1000"></td>
+  </tr>
+  <tr>
+    <td>Your latitude </td>
+    <td> <input type="text" name="latitude" id="latitude" placeholder="50.0752962" value="50.0752962"></td>
+  </tr>
+  <tr>
+    <td>Your longitude</td>
+     <td> <input type="text" name="longitude" id="longitude" placeholder="14.419395" value="14.419395"></td>
+  </tr>
+</table>
+        <button onclick="myFunction2(event);">Search</button>
           <p class="lead" id="demo"></p>
         <div class="map" id="map"></div>
 
@@ -144,7 +155,7 @@ function handleData(msg) {
      }
     else {
        //document.getElementById("demo").innerHTML = msg.state + " " + parseFloat(msg.latitude) + " " + parseFloat(msg.longitude);
-       document.getElementById("demo").innerHTML = "The most suitable country for you is " +  msg.state + ". The estimated life expectancy is " +msg.lifelength + ".";
+       document.getElementById("demo").innerHTML = "The most suitable country for you is " +  msg.state + ". The estimated life expectancy is " +msg.lifelength + " years.";
        console.log("recieved ");
        var pos = {
            lat: parseFloat(msg.latitude),

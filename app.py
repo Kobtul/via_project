@@ -36,11 +36,11 @@ def home():
 def gui():
     """Render the website's about page."""
     return render_template('stylestest.html')
-@app.route('/testing/')
+@app.route('/apidoc/')
 @cross_origin()
-def testing():
+def apidoc():
     """Render the website's about page."""
-    return render_template('stylestest.html')
+    return render_template('swagger.html')
 def process_fact(fact,data,maxdistance,bestknownlife,latstart,lngstart,datacountries):
     #@50.0752962,14.419395,16.5z?hl=en
     # latstart = 50.0752962

@@ -3,9 +3,25 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <title>WhereEmigrate</title>
-    <style type="text/css">
-      body { 
+     <title>WhereEmigrate</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="static/favicon.ico">
+
+    <title>Starter Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/static/css/starter-template.css" rel="stylesheet">
+
+      <style type="text/css">
+      body {
 	font-family: Trebuchet MS, sans-serif;
 	font-size: 15px;
 	color: #444;
@@ -181,13 +197,36 @@ font-style: italic;
     </style>
   </head>
   <body>
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">WhereEmigrate</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+              <li><a href="/gui">Home</a></li>
+              <li class="active"><a href="#">API documentation</a></li>
+
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+     <div class="container">
+
+      <div class="starter-template">
   <h1>WhereEmigrate</h1>
-    <div class="app-desc">Api to find a better live location</div>
-    <div class="app-desc">More information: <a href="https://helloreverb.com">https://helloreverb.com</a></div>
-    <div class="app-desc">Contact Info: <a href="hello@helloreverb.com">hello@helloreverb.com</a></div>
-    <div class="app-desc">Version: 0.0.1</div>
-    <div class="license-info">All rights reserved</div>
-    <div class="license-url">http://apache.org/licenses/LICENSE-2.0.html</div>
+    <div class="lead">Api to find a better live location</div>
+    <!--<div class="app-desc">More information: <a href="https://helloreverb.com">https://helloreverb.com</a></div>
+    <div class="app-desc">Contact Info: <a href="hello@helloreverb.com">hello@helloreverb.com</a></div>-->
+    <div class="lead">Version: 0.0.1</div>
+    <div class="lead">All rights reserved</div>
+   <!-- <div class="license-url">http://apache.org/licenses/LICENSE-2.0.html</div>-->
   <h2>Access</h2>
   
 
@@ -196,13 +235,13 @@ font-style: italic;
 
   
   <h2>Table of Contents </h2>
-  <div class="method-summary"></div>
+  <div class="table"></div>
   
   <ol>
   
   
   
-  <li><a href="#targetGet"><code><span class="http-method">get</span> /target</code></a></li>
+  <li><a href="#targetGet"><code><span class="http-method">get</span> /api</code></a></li>
   
   
   
@@ -216,7 +255,7 @@ font-style: italic;
   <div class="method"><a name="targetGet"/>
     <div class="method-path">
     <a class="up" href="#__Methods">Up</a>
-    <pre class="get"><code class="huge"><span class="http-method">get</span> /target</code></pre></div>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /api</code></pre></div>
     <div class="method-summary">Product Types (<span class="nickname">targetGet</span>)</div>
     
     <div class="method-notes">Returns GPS coordinates where to go</div>
@@ -330,7 +369,13 @@ font-style: italic;
       
     </div>  <!-- field-items -->
   </div>
-  
+          <div>
+            <p>Example:</p>
+            <code>http://viaapi.herokuapp.com/api/?max_distance=1000&latitude=50.102748899999995&longitude=14.3920006</code>
+          </div>
+      </div>
+  </div>
+
   
   </body>
 </html>
