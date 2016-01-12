@@ -39,9 +39,10 @@ def maps():
     """Render the website's about page."""
     return render_template('mapg.html')
 @app.route('/about/')
+@cross_origin()
 def about():
     """Render the website's about page."""
-    return render_template('mape.html')
+    return render_template('mapf.html')
 def process_fact(fact,data,maxdistance,bestknownlife,latstart,lngstart,datacountries):
     #@50.0752962,14.419395,16.5z?hl=en
     # latstart = 50.0752962

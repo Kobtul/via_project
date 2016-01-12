@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Geolocation</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <button onclick="myFunction2(event);">Click me</button>
+    <p id="demo"></p>
+    <script>
+function myFunction2(e) {
+    e.preventDefault();
+$.ajax(
+   {
+       //,latitude: 50.0752962 , longitude:14.419395
+        url: "http://localhost:5000/api",
+        //url: "https://viaapi.herokuapp.com/api",
+        type: "GET",
+        contentType: 'application/json; charset=utf-8',
+        crossDomain:true,
+        data: {max_distance:1000,latitude: 10 , longitude:-5},
+        success: function(msg) { handleData(msg) },
+       error: function(jqXHR) {
+           //jqXHR.getAllResponseHeaders().
+           //document.getElementById("demo").innerHTML = jqXHR.text;
+           console.log("ajax error " + jqXHR.status);
+       }
+    }
+);
+}
+function handleData(msg) {
+   if (msg.code == 400) {
+         document.getElementById("demo").innerHTML = msg.text;
+     }
+    else {
+       document.getElementById("demo").innerHTML = msg.state;
+   }
+};
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+  </body>
+</html>
