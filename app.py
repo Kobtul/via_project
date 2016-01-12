@@ -29,10 +29,11 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'this_should_be_configur
 @cross_origin()
 def home():
     """Render website's home page."""
-    return render_template('mapf.html')
-@app.route('/about/')
+    #return render_template('mapf.html')
+    return redirect("gui/", code=302)
+@app.route('/gui/')
 @cross_origin()
-def about():
+def gui():
     """Render the website's about page."""
     return render_template('mapf.html')
 def process_fact(fact,data,maxdistance,bestknownlife,latstart,lngstart,datacountries):
