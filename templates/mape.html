@@ -35,22 +35,30 @@
 // locate you.
 var myMap;
 var infoWindow;
+var marker = new google.maps.Marker({
+    position: location,
+    map: myMap,
+    animation: google.maps.Animation.DROP,
+
+});
 google.maps.event.addListener(map, 'click', function(event) {
    alert( 'Lat: ' + event.latLng.lat() + ' and Longitude is: ' + event.latLng.lng() );
 });
 function initMap() {
+    var latlng = new google.maps.LatLng(42.55308, 9.140625);
   myMap = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 50.064465, lng: 14.3587691},
     zoom: 6
   });
   infoWindow = new google.maps.InfoWindow({map: myMap});
-    google.maps.event.addListener(myMap,'click',function() {
-        alert("aaaa")
-        alert(results[0].geometry.location.lat())
-        //  document.getElementById('latitude').value = event.latLng.lat();
-        //  document.getElementById('latitude').value = event.latLng.lng();
+    google.maps.event.addListener(myMap, 'click', function(event) {
+            placeMarker(event.latLng);
+        });
 
-  });
+        function placeMarker(location) {
+            marker.setPosition(location);
+            map.setCenter(location);
+        }
   // Try HTML5 geolocation.
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
@@ -95,6 +103,8 @@ $.ajax(
         data: {max_distance:dist,latitude: latitude , longitude:longitude},
         success: function(msg) { handleData(msg) },
        error: function(jqXHR) {
+           //jqXHR.getAllResponseHeaders().
+           //document.getElementById("demo").innerHTML = jqXHR.text;
            console.log("ajax error " + jqXHR.status);
        }
     }
@@ -105,16 +115,21 @@ function handleData(msg) {
     //do some stuff
     //mapy(msg);
     //alert("aaaaa");
-    document.getElementById("demo").innerHTML = msg.state + " " + parseFloat(msg.latitude) + " " + parseFloat(msg.longitude);
-    console.log("recieved ");
-    var pos = {
-        lat: parseFloat(msg.latitude),
-        lng: parseFloat(msg.longitude)
-      };
-    infoWindow.setPosition(pos);
-    infoWindow.setContent('Your destination');
-    myMap.setCenter(pos);
-    //myMap.setCenter(new google.maps.LatLng( 45, 19 ) );
+     if (msg.code == 400) {
+         document.getElementById("demo").innerHTML = msg.text;
+     }
+    else {
+         document.getElementById("demo").innerHTML = msg.state + " " + parseFloat(msg.latitude) + " " + parseFloat(msg.longitude);
+         console.log("recieved ");
+         var pos = {
+             lat: parseFloat(msg.latitude),
+             lng: parseFloat(msg.longitude)
+         };
+         infoWindow.setPosition(pos);
+         infoWindow.setContent('Your destination');
+         myMap.setCenter(pos);
+         //myMap.setCenter(new google.maps.LatLng( 45, 19 ) );
+     }
 
 };
 
